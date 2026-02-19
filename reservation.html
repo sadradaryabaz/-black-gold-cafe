@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رزرو میز | Black Gold Cafe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ================= RESET & BASE ================= */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #c9a24d;
+            --gold-light: #f4d03f;
+            --gold-dark: #a07830;
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #1e1e1e;
+            --text-primary: #f5f5f5;
+            --text-muted: rgba(245, 245, 245, 0.6);
+            --border: rgba(201, 162, 77, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ================= LOADING SCREEN ================= */
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(201, 162, 77, 0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ================= HEADER ================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(15, 15, 15, 0.97);
+            box-shadow: 0 4px 30px rgba(201, 162, 77, 0.08);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            user-select: none;
+        }
+
+        .logo span {
+            color: var(--gold);
+        }
+
+        /* Desktop Nav */
+        .desktop-nav {
+            display: flex;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 65px;
+            right: -100%;
+            width: 280px;
+            height: calc(100vh - 65px);
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            z-index: 999;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.open {
+            right: 0;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu li a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .mobile-menu li a:hover,
+        .mobile-menu li a.active {
+            color: var(--gold);
+            background: rgba(201, 162, 77, 0.08);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .menu-overlay.show {
+            display: block;
+        }
+
+        /* ================= HERO SECTION ================= */
+        .reservation-hero {
+            padding: 140px 2rem 60px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(201, 162, 77, 0.04) 0%, transparent 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reservation-hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(201, 162, 77, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .reservation-hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .reservation-hero h1 span {
+            color: var(--gold);
+        }
+
+        .reservation-hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .gold-divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 1.5rem auto;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        .reservation-main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 2rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        /* ================= INFO SIDEBAR ================= */
+        .info-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: border-color 0.3s, transform 0.3s;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .info-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(201, 162, 77, 0.45);
+            box-shadow: 0 8px 30px rgba(201, 162, 77, 0.07);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(201, 162, 77, 0.12);
+            border: 1px solid rgba(201, 162, 77, 0.25);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-card-header h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-card p,
+        .info-card ul {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.9;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card ul li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .info-card ul li:last-child {
+            border-bottom: none;
+        }
+
+        .info-card ul li .day {
+            color: var(--text-muted);
+        }
+
+        .info-card ul li .time {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .info-card ul li.today {
+            background: rgba(201, 162, 77, 0.06);
+            border-radius: 6px;
+            padding: 0.35rem 0.5rem;
+        }
+
+        .info-card ul li.today .day {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .note-box {
+            margin-top: 1rem;
+            padding: 0.875rem 1rem;
+            background: rgba(201, 162, 77, 0.07);
+            border: 1px solid rgba(201, 162, 77, 0.2);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .note-box i {
+            color: var(--gold);
+            margin-left: 0.4rem;
+        }
+
+        /* ================= RESERVATION FORM ================= */
+        .reservation-form-wrap {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.25rem;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .reservation-form-wrap.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .form-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group label .required {
+            color: var(--gold);
+            margin-right: 3px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.92rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            width: 100%;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: rgba(201, 162, 77, 0.5);
+            box-shadow: 0 0 0 3px rgba(201, 162, 77, 0.08);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        /* Guest selector */
+        .guest-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .guest-selector:focus-within {
+            border-color: rgba(201, 162, 77, 0.5);
+        }
+
+        .guest-btn {
+            width: 30px;
+            height: 30px;
+            background: rgba(201, 162, 77, 0.12);
+            border: 1px solid rgba(201, 162, 77, 0.25);
+            border-radius: 6px;
+            color: var(--gold);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .guest-btn:hover {
+            background: rgba(201, 162, 77, 0.25);
+        }
+
+        .guest-count {
+            flex: 1;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .guest-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* Time slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem;
+        }
+
+        .time-slot {
+            padding: 0.6rem 0.4rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .time-slot:hover {
+            border-color: rgba(201, 162, 77, 0.4);
+            color: var(--gold);
+        }
+
+        .time-slot.selected {
+            background: rgba(201, 162, 77, 0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .time-slot.unavailable {
+            opacity: 0.35;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #0f0f0f;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 162, 77, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ================= SUCCESS MODAL ================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.show .modal-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(201, 162, 77, 0.12);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--gold);
+            animation: pulse-gold 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(201, 162, 77, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(201, 162, 77, 0);
+            }
+        }
+
+        .modal-box h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--gold);
+        }
+
+        .modal-box p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-detail {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: right;
+            font-size: 0.88rem;
+            line-height: 2;
+            color: var(--text-muted);
+        }
+
+        .modal-detail span {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #0f0f0f;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2.5rem;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 162, 77, 0.3);
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo span {
+            color: var(--gold);
+        }
+
+        .footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 900px) {
+            .reservation-main {
+                grid-template-columns: 1fr;
+            }
+
+            .info-sidebar {
+                order: 2;
+            }
+
+            .reservation-form-wrap {
+                order: 1;
+            }
+
+            .info-card,
+            .reservation-form-wrap {
+                transform: translateY(20px) !important;
+            }
+
+            .info-card.visible,
+            .reservation-form-wrap.visible {
+                transform: translateY(0) !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav {
+                padding: 1rem 1.25rem;
+            }
+
+            .reservation-hero {
+                padding: 100px 1.25rem 40px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: 1;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .reservation-form-wrap,
+            .info-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* ================= SCROLLBAR ================= */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 15, 15, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 4px;
+        }
+
+        /* ================= PERFORMANCE ================= */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= LOADING SCREEN ================= -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div style="font-size: 1.1rem; color: var(--gold); font-weight: 500;">در حال بارگذاری...</div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="header" id="header">
+        <div class="nav">
+            <div class="logo" onclick="window.location.href='index.html'">BLACK<span>GOLD</span></div>
+
+            <nav class="desktop-nav" aria-label="منوی اصلی دسکتاپ">
+                <ul class="nav-links">
+                    <li><a href="index.html">خانه</a></li>
+                    <li><a href="menu.html">منو</a></li>
+                    <li><a href="about.html">درباره ما</a></li>
+                    <li><a href="reservation.html" class="active">رزرو میز</a></li>
+                    <li><a href="contact.html">تماس</a></li>
+                </ul>
+            </nav>
+
+            <button class="hamburger" id="hamburger" aria-label="منوی موبایل" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <nav class="mobile-menu" id="mobileMenu" aria-label="منوی اصلی موبایل">
+        <ul>
+            <li><a href="index.html">خانه</a></li>
+            <li><a href="menu.html">منو</a></li>
+            <li><a href="about.html">درباره ما</a></li>
+            <li><a href="reservation.html" class="active">رزرو میز</a></li>
+            <li><a href="contact.html">تماس</a></li>
+        </ul>
+    </nav>
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- ================= HERO ================= -->
+    <section class="reservation-hero">
+        <h1>رزرو <span>میز</span></h1>
+        <div class="gold-divider"></div>
+        <p>لحظه‌ای خاص برای خود و عزیزانتان رقم بزنید. میزتان را از قبل رزرو کنید و با خیال راحت از تجربه‌ای بی‌نظیر لذت
+            ببرید.</p>
+    </section>
+
+    <!-- ================= MAIN ================= -->
+    <main class="reservation-main">
+
+        <!-- Info Sidebar -->
+        <aside class="info-sidebar">
+
+            <div class="info-card" data-animate>
+                <div class="info-card-header">
+                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                    <h3>ساعات کاری</h3>
+                </div>
+                <ul id="scheduleList">
+                    <li><span class="day">شنبه</span><span class="time">۰۸:۰۰ – ۲۲:۰۰</span></li>
+                    <li><span class="day">یکشنبه</span><span class="time">۰۸:۰۰ – ۲۲:۰۰</span></li>
+                    <li><span class="day">دوشنبه</span><span class="time">۰۸:۰۰ – ۲۲:۰۰</span></li>
+                    <li><span class="day">سه‌شنبه</span><span class="time">۰۸:۰۰ – ۲۲:۰۰</span></li>
+                    <li><span class="day">چهارشنبه</span><span class="time">۰۸:۰۰ – ۲۲:۰۰</span></li>
+                    <li><span class="day">پنجشنبه</span><span class="time">۰۹:۰۰ – ۲۳:۰۰</span></li>
+                    <li><span class="day">جمعه</span><span class="time">۱۰:۰۰ – ۲۳:۰۰</span></li>
+                </ul>
+            </div>
+
+            <div class="info-card" data-animate>
+                <div class="info-card-header">
+                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>آدرس کافه</h3>
+                </div>
+                <p>تهران، خیابان ولیعصر، نرسیده به پارک ساعی، پلاک ۱۲۸</p>
+                <div class="note-box">
+                    <i class="fas fa-info-circle"></i>
+                    پارکینگ اختصاصی برای مهمانان رزرو‌شده در نظر گرفته شده است.
+                </div>
+            </div>
+
+            <div class="info-card" data-animate>
+                <div class="info-card-header">
+                    <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                    <h3>نکات مهم</h3>
+                </div>
+                <p style="line-height: 2.1; font-size: 0.88rem;">
+                    • رزرو حداقل <strong style="color: var(--gold);">۲ ساعت</strong> قبل از موعد انجام شود<br>
+                    • در صورت تأخیر بیش از ۱۵ دقیقه، رزرو لغو می‌شود<br>
+                    • لغو رزرو تا <strong style="color: var(--gold);">۱ ساعت</strong> قبل امکان‌پذیر است<br>
+                    • حداکثر ظرفیت هر رزرو ۱۲ نفر می‌باشد
+                </p>
+            </div>
+
+            <div class="info-card" data-animate>
+                <div class="info-card-header">
+                    <div class="info-icon"><i class="fas fa-phone"></i></div>
+                    <h3>تماس مستقیم</h3>
+                </div>
+                <p>برای رزرو گروهی یا رویدادهای خاص با ما تماس بگیرید:</p>
+                <p
+                    style="margin-top: 0.75rem; font-size: 1.1rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; direction: ltr; text-align: center;">
+                    021 - 8800 - 4422
+                </p>
+            </div>
+
+        </aside>
+
+        <!-- Form -->
+        <div class="reservation-form-wrap" data-animate>
+            <h2 class="form-title">اطلاعات رزرو</h2>
+            <p class="form-subtitle">فیلدهای ستاره‌دار الزامی هستند</p>
+
+            <form id="reservationForm" novalidate>
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>نام <span class="required">*</span></label>
+                        <input type="text" id="firstName" placeholder="نام شما" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>نام خانوادگی <span class="required">*</span></label>
+                        <input type="text" id="lastName" placeholder="نام خانوادگی" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>شماره موبایل <span class="required">*</span></label>
+                        <input type="tel" id="phone" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" required dir="ltr"
+                            style="text-align:right">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ایمیل</label>
+                        <input type="email" id="email" placeholder="example@email.com" dir="ltr"
+                            style="text-align:right">
+                    </div>
+
+                    <div class="form-group">
+                        <label>تاریخ رزرو <span class="required">*</span></label>
+                        <input type="date" id="reserveDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>تعداد مهمانان <span class="required">*</span></label>
+                        <div class="guest-selector">
+                            <button type="button" class="guest-btn" id="guestMinus">−</button>
+                            <span class="guest-count" id="guestCount">۲</span>
+                            <span class="guest-label">نفر</span>
+                            <button type="button" class="guest-btn" id="guestPlus">+</button>
+                        </div>
+                        <input type="hidden" id="guestValue" value="2">
+                    </div>
+
+                    <div class="form-group full">
+                        <label>ساعت رزرو <span class="required">*</span></label>
+                        <div class="time-slots" id="timeSlots">
+                            <div class="time-slot" data-time="09:00">۹:۰۰</div>
+                            <div class="time-slot" data-time="10:00">۱۰:۰۰</div>
+                            <div class="time-slot" data-time="11:00">۱۱:۰۰</div>
+                            <div class="time-slot" data-time="12:00">۱۲:۰۰</div>
+                            <div class="time-slot" data-time="13:00">۱۳:۰۰</div>
+                            <div class="time-slot" data-time="14:00">۱۴:۰۰</div>
+                            <div class="time-slot" data-time="15:00">۱۵:۰۰</div>
+                            <div class="time-slot" data-time="16:00">۱۶:۰۰</div>
+                            <div class="time-slot" data-time="17:00">۱۷:۰۰</div>
+                            <div class="time-slot" data-time="18:00">۱۸:۰۰</div>
+                            <div class="time-slot" data-time="19:00">۱۹:۰۰</div>
+                            <div class="time-slot unavailable" data-time="20:00">۲۰:۰۰</div>
+                            <div class="time-slot unavailable" data-time="21:00">۲۱:۰۰</div>
+                            <div class="time-slot" data-time="22:00">۲۲:۰۰</div>
+                        </div>
+                        <input type="hidden" id="selectedTime" required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>مناسبت</label>
+                        <select id="occasion">
+                            <option value="">انتخاب کنید (اختیاری)</option>
+                            <option value="birthday">جشن تولد 🎂</option>
+                            <option value="anniversary">سالگرد ازدواج 💍</option>
+                            <option value="business">جلسه کاری 💼</option>
+                            <option value="date">قرار دونفره ❤️</option>
+                            <option value="family">گردهمایی خانوادگی 👨‍👩‍👧</option>
+                            <option value="other">سایر</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full">
+                        <label>درخواست‌های خاص</label>
+                        <textarea id="specialReq"
+                            placeholder="مثلاً: میز کنار پنجره، آلرژی غذایی، دکوراسیون خاص و..."></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-calendar-check"></i>
+                    ثبت رزرو
+                </button>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+        <div class="footer-logo">BLACK<span>GOLD</span></div>
+        <p>© ۱۴۰۴ تمامی حقوق محفوظ است</p>
+    </footer>
+
+    <!-- ================= SUCCESS MODAL ================= -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fas fa-check"></i></div>
+            <h2>رزرو تأیید شد!</h2>
+            <p>میز شما با موفقیت رزرو شد. جزئیات رزرو از طریق پیامک ارسال خواهد شد.</p>
+            <div class="modal-detail" id="modalDetail"></div>
+            <button class="modal-close-btn" onclick="closeModal()">باشه، ممنون</button>
+        </div>
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+        // ================= LOADING =================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 600);
+        });
+
+        // ================= HEADER SCROLL =================
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        // ================= MOBILE MENU =================
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            const isOpen = mobileMenu.classList.toggle('open');
+            hamburger.classList.toggle('open', isOpen);
+            menuOverlay.classList.toggle('show', isOpen);
+            hamburger.setAttribute('aria-expanded', isOpen);
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+
+        // ================= INTERSECTION OBSERVER =================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+        // ================= SET MIN DATE =================
+        const dateInput = document.getElementById('reserveDate');
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.min = tomorrow.toISOString().split('T')[0];
+
+        // Set max date to 60 days ahead
+        const maxDate = new Date(today);
+        maxDate.setDate(maxDate.getDate() + 60);
+        dateInput.max = maxDate.toISOString().split('T')[0];
+
+        // ================= GUEST COUNTER =================
+        let guestNum = 2;
+        const guestCountEl = document.getElementById('guestCount');
+        const guestValueEl = document.getElementById('guestValue');
+
+        const persianNums = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        function toPersian(n) {
+            return String(n).split('').map(d => persianNums[d] || d).join('');
+        }
+
+        document.getElementById('guestMinus').addEventListener('click', () => {
+            if (guestNum > 1) {
+                guestNum--;
+                guestCountEl.textContent = toPersian(guestNum);
+                guestValueEl.value = guestNum;
+            }
+        });
+
+        document.getElementById('guestPlus').addEventListener('click', () => {
+            if (guestNum < 12) {
+                guestNum++;
+                guestCountEl.textContent = toPersian(guestNum);
+                guestValueEl.value = guestNum;
+            }
+        });
+
+        // ================= TIME SLOTS =================
+        let selectedTimeSlot = null;
+        document.querySelectorAll('.time-slot:not(.unavailable)').forEach(slot => {
+            slot.addEventListener('click', () => {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+                selectedTimeSlot = slot.dataset.time;
+                document.getElementById('selectedTime').value = selectedTimeSlot;
+            });
+        });
+
+        // ================= HIGHLIGHT TODAY IN SCHEDULE =================
+        const dayNames = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'];
+        const todayName = dayNames[new Date().getDay()];
+        document.querySelectorAll('#scheduleList li').forEach(li => {
+            if (li.querySelector('.day').textContent.trim() === todayName) {
+                li.classList.add('today');
+            }
+        });
+
+        // ================= FORM VALIDATION & SUBMIT =================
+        function validatePhone(phone) {
+            return /^(۰۹|09)[0-9۰-۹]{9}$/.test(phone.replace(/\s/g, ''));
+        }
+
+        document.getElementById('reservationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const date = document.getElementById('reserveDate').value;
+            const time = document.getElementById('selectedTime').value;
+
+            if (!firstName || !lastName) {
+                shake(document.getElementById('firstName'));
+                return;
+            }
+            if (!phone) {
+                shake(document.getElementById('phone'));
+                return;
+            }
+            if (!date) {
+                shake(document.getElementById('reserveDate'));
+                return;
+            }
+            if (!time) {
+                document.getElementById('timeSlots').style.outline = '2px solid rgba(201,162,77,0.5)';
+                document.getElementById('timeSlots').style.borderRadius = '10px';
+                setTimeout(() => document.getElementById('timeSlots').style.outline = '', 1500);
+                return;
+            }
+
+            // Show success modal
+            const [h, m] = time.split(':');
+            const hPer = toPersian(parseInt(h));
+            const dateParts = date.split('-');
+            document.getElementById('modalDetail').innerHTML = `
+                نام: <span>${firstName} ${lastName}</span><br>
+                تاریخ: <span>${toPersian(dateParts[2])}/${toPersian(dateParts[1])}/${toPersian(dateParts[0])}</span><br>
+                ساعت: <span>${hPer}:${m === '00' ? '۰۰' : toPersian(parseInt(m))}</span><br>
+                تعداد مهمانان: <span>${toPersian(guestNum)} نفر</span>
+            `;
+
+            document.getElementById('successModal').classList.add('show');
+        });
+
+        function shake(el) {
+            el.style.borderColor = 'rgba(231,76,60,0.7)';
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake 0.4s ease';
+            setTimeout(() => {
+                el.style.borderColor = '';
+                el.style.animation = '';
+            }, 800);
+        }
+
+        // Inject shake keyframe
+        const style = document.createElement('style');
+        style.textContent = '@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }';
+        document.head.appendChild(style);
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            document.getElementById('reservationForm').reset();
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            selectedTimeSlot = null;
+            document.getElementById('selectedTime').value = '';
+            guestNum = 2;
+            guestCountEl.textContent = '۲';
+            guestValueEl.value = 2;
+        }
+
+        // Close modal on overlay click
+        document.getElementById('successModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
+
+</html>

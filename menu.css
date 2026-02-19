@@ -1,0 +1,203 @@
+.menu-page {
+  padding-top: 140px;
+  padding-bottom: 80px;
+}
+
+.menu-title {
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 40px;
+  color: #c9a24d;
+}
+
+/* ===== FILTERS ===== */
+.menu-filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid #c9a24d;
+  color: #c9a24d;
+  padding: 10px 22px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-family: inherit;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background: #c9a24d;
+  color: #000;
+}
+
+/* ===== MENU GRID ===== */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+}
+
+/* ===== CARD ===== */
+.menu-card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 20px;
+  border: 1px solid #2a2a2a;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.menu-card:hover {
+  transform: translateY(-6px);
+  border-color: #c9a24d;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.menu-card h3 {
+  margin: 15px 0 5px;
+}
+
+.menu-card p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.price {
+  display: inline-block;
+  margin-top: 12px;
+  color: #c9a24d;
+  font-weight: 700;
+}
+
+
+.cardtrans {
+  translate: none;
+  rotate: none;
+  scale: none;
+
+  opacity: 1;
+  transform: translateY(48px);
+}
+
+
+/* ===============================
+   HAMBURGER MENU
+================================ */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.hamburger span {
+  width: 26px;
+  height: 2px;
+  background: #c9a24d;
+  transition: 0.4s ease;
+}
+
+/* ===== Mobile Menu ===== */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 75%;
+  height: 100vh;
+  background: #111;
+  padding: 100px 30px;
+  transition: 0.4s ease;
+  z-index: 1000;
+}
+
+.mobile-menu.active {
+  right: 0;
+}
+
+.mobile-menu ul {
+  list-style: none;
+}
+
+.mobile-menu li {
+  margin-bottom: 28px;
+}
+
+.mobile-menu a {
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mobile-menu a.active {
+  color: #c9a24d;
+}
+
+/* ===== Overlay ===== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 900;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ===== Hamburger Animation ===== */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+
+.desktop-nav {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+}

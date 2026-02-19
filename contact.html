@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="تماس با کافه Black Gold - آدرس، تلفن، ایمیل و فرم تماس">
+    <title>تماس | Black Gold</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ================= BASE & RESET ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            font-family: "Vazirmatn", sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #f5f5f5;
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            border: none;
+            background: none;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* ================= LOADING SCREEN ================= */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(201, 162, 77, 0.1);
+            border-top: 4px solid #c9a24d;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================= STICKY HEADER ================= */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(201, 162, 77, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.scrolled {
+            background: rgba(15, 15, 15, 0.98);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-bottom-color: rgba(201, 162, 77, 0.3);
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: padding 0.4s ease;
+        }
+
+        .header.scrolled .nav {
+            padding: 1rem 2.5rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(2deg);
+            filter: drop-shadow(0 0 20px rgba(201, 162, 77, 0.5));
+        }
+
+        /* ================= DESKTOP NAV ================= */
+        .desktop-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .desktop-nav a {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.active {
+            background: linear-gradient(135deg, rgba(201, 162, 77, 0.1), rgba(244, 208, 63, 0.1));
+            color: #c9a24d;
+            box-shadow: 0 4px 20px rgba(201, 162, 77, 0.2);
+        }
+
+        /* ================= HAMBURGER ================= */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background: #f5f5f5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 3px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* ================= MOBILE MENU ================= */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-content {
+            height: 100vh;
+            padding: 6rem 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mobile-menu ul {
+            list-style: none;
+        }
+
+        .mobile-menu li {
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu a {
+            font-size: 2rem;
+            font-weight: 600;
+            padding: 1rem 0;
+            display: block;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #c9a24d, #f4d03f);
+            transition: width 0.3s ease;
+        }
+
+        .mobile-menu a:hover::after,
+        .mobile-menu a.active::after {
+            width: 100%;
+        }
+
+        /* ================= OVERLAY ================= */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+            transition: all 0.4s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ================= HERO ================= */
+        .contact-hero {
+            text-align: center;
+            padding: 12rem 2.5rem 7rem;
+            background: radial-gradient(ellipse at center, rgba(201, 162, 77, 0.1) 0%, transparent 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a24d' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c9a24d 0%, #f4d03f 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: heroIn 1s ease forwards 0.3s;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: rgba(201, 162, 77, 0.9);
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroIn 0.8s ease forwards 0.7s;
+        }
+
+        @keyframes heroIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= CONTAINER ================= */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2.5rem 6rem;
+        }
+
+        /* ================= CONTACT INFO CARDS ================= */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .info-card {
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(201, 162, 77, 0.12);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.35s ease;
+        }
+
+        .info-card:hover {
+            border-color: rgba(201, 162, 77, 0.35);
+            background: rgba(201, 162, 77, 0.05);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(201, 162, 77, 0.12);
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(201, 162, 77, 0.15), rgba(244, 208, 63, 0.08));
+            border: 1px solid rgba(201, 162, 77, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.4rem;
+            color: #c9a24d;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover .info-icon {
+            background: linear-gradient(135deg, rgba(201, 162, 77, 0.25), rgba(244, 208, 63, 0.15));
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #c9a24d;
+            margin-bottom: 0.75rem;
+        }
+
+        .info-card p,
+        .info-card a {
+            color: rgba(245, 245, 245, 0.75);
+            font-size: 1rem;
+            line-height: 1.7;
+            transition: color 0.3s;
+        }
+
+        .info-card a:hover {
+            color: #c9a24d;
+        }
+
+        /* ================= CONTACT LAYOUT (FORM + MAP) ================= */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        /* ================= CONTACT FORM ================= */
+        .form-card {
+            padding: 3rem;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(201, 162, 77, 0.12);
+            border-radius: 16px;
+        }
+
+        .form-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(245, 245, 245, 0.8);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.95rem 1.2rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(201, 162, 77, 0.15);
+            border-radius: 10px;
+            color: #f5f5f5;
+            font-family: "Vazirmatn", sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group select option {
+            background: #1a1a1a;
+            color: #f5f5f5;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: rgba(201, 162, 77, 0.5);
+            background: rgba(201, 162, 77, 0.05);
+            box-shadow: 0 0 0 3px rgba(201, 162, 77, 0.08);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(245, 245, 245, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            color: #0f0f0f;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: "Vazirmatn", sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(201, 162, 77, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(201, 162, 77, 0.55);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn.sent {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.35);
+        }
+
+        /* ================= MAP CARD ================= */
+        .map-card {
+            padding: 3rem;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(201, 162, 77, 0.12);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map-card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .map-placeholder {
+            flex: 1;
+            min-height: 280px;
+            background: rgba(201, 162, 77, 0.03);
+            border: 1px solid rgba(201, 162, 77, 0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            color: rgba(201, 162, 77, 0.5);
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(201, 162, 77, 0.06) 0%, transparent 65%);
+        }
+
+        .map-placeholder p {
+            font-size: 1rem;
+            color: rgba(245, 245, 245, 0.4);
+            z-index: 1;
+        }
+
+        .map-address-detail {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(201, 162, 77, 0.05);
+            border: 1px solid rgba(201, 162, 77, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .map-address-detail i {
+            color: #c9a24d;
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .map-address-detail p {
+            color: rgba(245, 245, 245, 0.75);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ================= HOURS SECTION ================= */
+        .hours-section {
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(201, 162, 77, 0.1);
+            border-radius: 16px;
+            margin-bottom: 4rem;
+        }
+
+        .hours-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+        }
+
+        .hours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .hours-item {
+            padding: 1.25rem 1.5rem;
+            background: rgba(201, 162, 77, 0.04);
+            border: 1px solid rgba(201, 162, 77, 0.08);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .hours-item:hover {
+            border-color: rgba(201, 162, 77, 0.25);
+            background: rgba(201, 162, 77, 0.08);
+        }
+
+        .hours-item.today {
+            border-color: rgba(201, 162, 77, 0.4);
+            background: rgba(201, 162, 77, 0.1);
+        }
+
+        .hours-item.today .day-name {
+            color: #c9a24d;
+            font-weight: 600;
+        }
+
+        .day-name {
+            font-size: 1rem;
+            color: rgba(245, 245, 245, 0.8);
+        }
+
+        .day-time {
+            font-size: 0.95rem;
+            color: #c9a24d;
+            font-weight: 500;
+        }
+
+        .today-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            color: #0f0f0f;
+            padding: 0.1rem 0.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* ================= SOCIAL SECTION ================= */
+        .social-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: radial-gradient(ellipse at center, rgba(201, 162, 77, 0.08) 0%, transparent 70%);
+            border: 1px solid rgba(201, 162, 77, 0.1);
+            border-radius: 16px;
+        }
+
+        .social-section h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .social-section p {
+            color: rgba(245, 245, 245, 0.6);
+            margin-bottom: 2.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(201, 162, 77, 0.08);
+            border: 1px solid rgba(201, 162, 77, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #c9a24d;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            color: #0f0f0f;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 24px rgba(201, 162, 77, 0.4);
+        }
+
+        /* ================= SUCCESS TOAST ================= */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            color: #0f0f0f;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            z-index: 5000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 30px rgba(201, 162, 77, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ================= SCROLL ANIMATIONS ================= */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .animate-on-scroll.scale-in {
+            transform: scale(0.93);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* ================= CUSTOM SCROLLBAR ================= */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 15, 15, 0.5); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #c9a24d, #f4d03f);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #f4d03f, #c9a24d);
+        }
+
+        /* ================= PERFORMANCE ================= */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (min-width: 769px) {
+            .desktop-nav { display: block; }
+            .hamburger { display: none; }
+            .mobile-menu, .menu-overlay { display: none; }
+        }
+
+        @media (max-width: 1024px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .desktop-nav { display: none; }
+
+            .contact-hero {
+                padding: 9rem 1.5rem 5rem;
+            }
+
+            .container {
+                padding: 0 1.5rem 4rem;
+            }
+
+            .form-card,
+            .map-card,
+            .hours-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-menu a {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ================= LOADING SCREEN ================= -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div style="font-size: 1.25rem; color: #c9a24d; font-weight: 500;">در حال بارگذاری...</div>
+    </div>
+
+    <!-- ================= HEADER ================= -->
+    <header class="header" id="header">
+        <div class="nav">
+            <div class="logo" onclick="window.location.href='index.html'">BLACK<span style="background:linear-gradient(135deg,#c9a24d,#f4d03f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">GOLD</span></div>
+
+            <nav class="desktop-nav" aria-label="منوی اصلی دسکتاپ">
+                <ul style="display:flex;list-style:none;gap:2.5rem;align-items:center;">
+                    <li><a href="index.html" style="padding:0.75rem 1.5rem;border-radius:50px;transition:all 0.3s;font-weight:500;">خانه</a></li>
+                    <li><a href="menu.html" style="padding:0.75rem 1.5rem;border-radius:50px;transition:all 0.3s;font-weight:500;">منو</a></li>
+                    <li><a href="about.html" style="padding:0.75rem 1.5rem;border-radius:50px;transition:all 0.3s;font-weight:500;">درباره ما</a></li>
+                    <li><a href="/reservation.html" style="padding:0.75rem 1.5rem;border-radius:50px;transition:all 0.3s;font-weight:500;">رزرو میز</a></li>
+                    <li><a href="contact.html" class="active" style="padding:0.75rem 1.5rem;border-radius:50px;transition:all 0.3s;font-weight:500;background:linear-gradient(135deg,rgba(201,162,77,0.1),rgba(244,208,63,0.1));color:#c9a24d;box-shadow:0 4px 20px rgba(201,162,77,0.2);">تماس</a></li>
+                </ul>
+            </nav>
+
+            <button class="hamburger" id="hamburger" aria-label="منوی موبایل" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="منوی موبایل">
+        <div class="mobile-menu-content">
+            <ul>
+                <li><a href="index.html">خانه</a></li>
+                <li><a href="menu.html">منو</a></li>
+                <li><a href="about.html">درباره ما</a></li>
+                <li><a href="#reserve">رزرو میز</a></li>
+                <li><a href="contact.html" class="active">تماس</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- ================= HERO ================= -->
+    <section class="contact-hero" id="contact">
+        <h1 class="hero-title">تماس با ما</h1>
+        <p class="hero-subtitle">خوشحال می‌شیم صداتو بشنویم — هر سوال، پیشنهاد یا انتقادی داری.</p>
+    </section>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="container">
+
+        <!-- Info Cards -->
+        <div class="info-grid animate-on-scroll">
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <h3>آدرس</h3>
+                <p>تهران، خیابان ولیعصر<br>پلاک ۱۲۳، طبقه اول</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                <h3>تلفن تماس</h3>
+                <a href="tel:+982122345678" style="direction:ltr;display:block;">‎+98 21 2234 5678</a>
+                <a href="tel:+989121234567" style="direction:ltr;display:block;margin-top:0.4rem;">‎+98 912 123 4567</a>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <h3>ایمیل</h3>
+                <a href="mailto:hello@blackgold.cafe">hello@blackgold.cafe</a>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-clock"></i></div>
+                <h3>ساعات کاری امروز</h3>
+                <p>شنبه تا چهارشنبه<br><span style="color:#c9a24d;font-weight:600;">۸:۰۰ تا ۲۳:۰۰</span></p>
+            </div>
+        </div>
+
+        <!-- Form + Map -->
+        <div class="contact-layout">
+            <!-- Form -->
+            <div class="form-card animate-on-scroll">
+                <h2>ارسال پیام</h2>
+                <form id="contactForm" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">نام و نام خانوادگی</label>
+                            <input type="text" id="name" placeholder="مثال: علی رضایی" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">شماره تماس</label>
+                            <input type="tel" id="phone" placeholder="09xxxxxxxxx" dir="ltr">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">ایمیل</label>
+                        <input type="email" id="email" placeholder="example@email.com" dir="ltr" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">موضوع</label>
+                        <select id="subject">
+                            <option value="">انتخاب کنید...</option>
+                            <option value="reservation">رزرو میز</option>
+                            <option value="feedback">پیشنهاد و انتقاد</option>
+                            <option value="event">برگزاری رویداد</option>
+                            <option value="order">سفارش آنلاین</option>
+                            <option value="other">سایر</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">پیام شما</label>
+                        <textarea id="message" placeholder="پیامتون رو اینجا بنویسید..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        ارسال پیام
+                    </button>
+                </form>
+            </div>
+
+            <!-- Map -->
+            <div class="map-card animate-on-scroll" style="transition-delay:0.15s;">
+                <h2>موقعیت ما</h2>
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>نقشه تعاملی</p>
+                </div>
+                <div class="map-address-detail">
+                    <i class="fas fa-location-dot"></i>
+                    <p>تهران، خیابان ولیعصر، بالاتر از میدان ونک، پلاک ۱۲۳، طبقه اول — واحد Black Gold</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="hours-section animate-on-scroll">
+            <h2><i class="fas fa-clock" style="margin-left:0.75rem;font-size:1.4rem;"></i> ساعات کاری</h2>
+            <div class="hours-grid" id="hoursGrid">
+                <div class="hours-item"><span class="day-name">شنبه</span><span class="day-time">۸:۰۰ – ۲۳:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">یکشنبه</span><span class="day-time">۸:۰۰ – ۲۳:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">دوشنبه</span><span class="day-time">۸:۰۰ – ۲۳:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">سه‌شنبه</span><span class="day-time">۸:۰۰ – ۲۳:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">چهارشنبه</span><span class="day-time">۸:۰۰ – ۲۳:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">پنجشنبه</span><span class="day-time">۹:۰۰ – ۲۴:۰۰</span></div>
+                <div class="hours-item"><span class="day-name">جمعه</span><span class="day-time">۱۰:۰۰ – ۲۴:۰۰</span></div>
+            </div>
+        </div>
+
+        <!-- Social -->
+        <div class="social-section animate-on-scroll">
+            <h2>ما را در شبکه‌های اجتماعی دنبال کنید</h2>
+            <p>آخرین اخبار، آیتم‌های جدید منو و رویدادها</p>
+            <div class="social-links">
+                <a href="#" class="social-link" title="اینستاگرام"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link" title="تلگرام"><i class="fab fa-telegram"></i></a>
+                <a href="#" class="social-link" title="توییتر / X"><i class="fab fa-x-twitter"></i></a>
+                <a href="#" class="social-link" title="واتساپ"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="social-link" title="یوتیوب"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        پیام شما با موفقیت ارسال شد!
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 600);
+        });
+
+        // Sticky Header
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        // Mobile Menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            const isOpen = mobileMenu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            hamburger.setAttribute('aria-expanded', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+        mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', toggleMenu));
+
+        // Highlight today in hours grid
+        (function highlightToday() {
+            // Jalali weekday: 0=Shanbe, 1=Yek, 2=Do, 3=Se, 4=Chaharshanbe, 5=Panj, 6=Jom
+            const today = new Date().getDay(); // 0=Sun, 6=Sat
+            const persianIndex = today === 6 ? 0 : today + 1; // map to Persian week
+            const items = document.querySelectorAll('.hours-item');
+            if (items[persianIndex]) {
+                items[persianIndex].classList.add('today');
+                const dayName = items[persianIndex].querySelector('.day-name');
+                const badge = document.createElement('span');
+                badge.className = 'today-badge';
+                badge.textContent = 'امروز';
+                dayName.prepend(badge);
+            }
+        })();
+
+        // Scroll Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // Form Submission
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const toast = document.getElementById('toast');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !message) {
+                // Shake empty fields
+                [name ? null : 'name', email ? null : 'email', message ? null : 'message'].forEach(id => {
+                    if (!id) return;
+                    const el = document.getElementById(id);
+                    el.style.borderColor = 'rgba(255,80,80,0.6)';
+                    el.style.boxShadow = '0 0 0 3px rgba(255,80,80,0.1)';
+                    setTimeout(() => {
+                        el.style.borderColor = '';
+                        el.style.boxShadow = '';
+                    }, 2000);
+                });
+                return;
+            }
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال...';
+
+            setTimeout(() => {
+                submitBtn.classList.add('sent');
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> ارسال شد!';
+
+                // Show toast
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3500);
+
+                form.reset();
+
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('sent');
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ارسال پیام';
+                }, 3500);
+            }, 1800);
+        });
+    </script>
+</body>
+</html>
