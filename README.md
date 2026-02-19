@@ -20,17 +20,18 @@ cafe-website/
 │   └── fonts/
 │
 ├── css/
-│   ├── style.css        # استایل اصلی (مشکی–طلایی)
-│   ├── responsive.css   # موبایل و تبلت
-│   └── animations.css   # انیمیشن‌ها (GSAP / CSS)
+│   ├── style.css       
+│   ├── responsive.css   
+│   └── animations.css   
 │
 ├── js/
-│   ├── main.js          # اسکریپت‌های عمومی
-│   ├── menu.js          # فیلتر منو
-│   ├── animation.js     # GSAP Animations
-│   └── reservation.js  # فرم رزرو
+│   ├── main.js          
+│   ├── menu.js          
+│   ├── animation.js     
+│   └── reservation.js  
 │
 └── README.md
+
 
 
 
